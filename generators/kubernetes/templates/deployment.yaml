@@ -51,3 +51,13 @@ spec:
           - name: MONGO_CA
             value: {{tag ' .Values.services.mongo.ca '}}
           {{/has}}
+          {{#if this.services }}
+          {{#each this.services}}
+          - {{{this}}}
+            valueFrom:
+              secretKeyRef:
+                name: {{tag ' .Values.secretRefs'}}
+                key: binding
+                optional: true
+          {{/each}}
+          {{/if ~}}

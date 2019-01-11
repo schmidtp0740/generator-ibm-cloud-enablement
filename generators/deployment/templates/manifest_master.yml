@@ -37,7 +37,7 @@ applications:
   {{#if this.services }}
   services:
   {{#each this.services}}
-    - {{{this}}}
+    - {{{this}}} 
   {{/each}}
   {{/if ~}}
   {{#if this.env}}

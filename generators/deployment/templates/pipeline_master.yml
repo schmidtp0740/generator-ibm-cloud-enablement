@@ -72,6 +72,13 @@ stages:
   - type: job
     stage: Build Stage
     job: Build
+    services: HERE
+    {{#if services}}
+    services2: HERE
+    {{/if ~}}
+    {{#if this.services}}
+    services3: HERE
+    {{/if ~}}
   {{#has deployment.type 'Kube'}}
   properties:
   - name: buildProperties
@@ -86,6 +93,13 @@ stages:
   - name: IMAGE_REGISTRY_TOKEN
     value: ${IMAGE_REGISTRY_TOKEN}
     type: text
+  {{#if this.services }}
+  {{#each this.services}}
+  - name: {{{this}}}
+    value: ${ '{{{this}}}' }
+    type: text
+  {{/each}}
+  {{/if ~}}
   {{/has}}
   triggers:
   - type: stage

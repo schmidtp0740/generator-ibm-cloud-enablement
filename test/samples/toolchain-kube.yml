@@ -7,7 +7,7 @@ template:
     - build
 
 toolchain:
-  name: my-application
+  name: "{{name}}" 
 
 services:
   # Github repos
