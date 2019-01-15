@@ -12,7 +12,7 @@
       "description": "The IBM Cloud region",
       "type": "string"
     },
-    {{#has deployment.type 'CF'}}
+    {{tag '#isCF' }}
     "dev-organization": {
       "description": "The IBM Cloud org",
       "type": "string"
@@ -41,8 +41,8 @@
       "description": "Your cluster name. Retrieve it with [ibmcloud cs clusters] or via the console at https://cloud.ibm.com/containers-kubernetes/home/clusters.",
       "type": "string"
     },
-    {{/has}}
-    {{#has deployment.type 'VSI'}}
+    {{tag '/isKube' }}
+    {{tag '#isVSI' }}
     "public-key": {
       "description": "SSH Public Key",
       "type": "string"
@@ -67,7 +67,7 @@
       "description": "GitLab Access Token",
       "type": "password"
     },
-    {{/has}}
+    {{tag '/isVSI' }}
     "app-name": {
       "description": "app name",
       "type": "string"
@@ -83,7 +83,7 @@
     "title": "IBM Cloud API Key",
     "key": "api-key"
   },
-  {{#has deployment.type 'Kube'}}
+  {{tag '#isKube' }}
   {
     "type": "password",
     "readonly": false,
@@ -95,8 +95,8 @@
     "title": "Kubernetes Cluster Name",
     "key": "kube-cluster-name"
   },
-  {{/has}}
-  {{#has deployment.type 'VSI'}}
+  {{tag '/isKube' }}
+  {{tag '#isVSI' }}
   {
     "type": "text",
     "readonly": false,
@@ -109,7 +109,7 @@
     "title": "SSH Private Key",
     "key": "private-key"
   },
-  {{/has}}
+  {{tag '/isVSI' }}
   {
     "type": "text",
     "readonly": false,
@@ -117,7 +117,7 @@
     "key": "app-name"
   }, {
     "type": "table",
-    {{#has deployment.type 'CF'}}
+    {{tag '#isCF' }}
     "columnCount": 3,
     "widths": ["28%", "28%", "28%"],
     "items": [{
@@ -175,8 +175,8 @@
       "type": "select",
       "key": "dev-region"
     }]
-    {{/has}}
-    {{#has deployment.type 'VSI'}}
+    {{tag '/isKube' }}
+    {{tag '#isVSI' }}
     "type": "table",
     "columnCount": 2,
     "widths": ["28%", "28%"],
@@ -205,6 +205,6 @@
       "type": "label",
       "key": "GitLab Access Token"
     }]
-    {{/has}}
+    {{tag '/isVSI' }}
   }]
 }

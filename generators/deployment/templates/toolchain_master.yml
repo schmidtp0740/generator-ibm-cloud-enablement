@@ -36,14 +36,14 @@ services:
           REPO: repo
           CF_APP: "{{tag 'form.pipeline.parameters.app-name'}}"
           API_KEY: "{{tag 'form.pipeline.parameters.api-key'}}"
-          {{#has deployment.type 'Kube'}}
+          {{tag '#isKube' }}
           CHART_NAME: "{{tag 'form.pipeline.parameters.chart-name'}}"
           KUBE_CLUSTER_NAME: "{{tag 'form.pipeline.parameters.kube-cluster-name'}}"
           CLUSTER_NAMESPACE: "{{tag 'form.pipeline.parameters.cluster-namespace'}}"
           IMAGE_REGISTRY_TOKEN: "{{tag 'form.pipeline.parameters.image-registry-token'}}"
           REGISTRY_NAMESPACE: "{{tag 'form.pipeline.parameters.registry-namespace'}}"
-          {{/has}}
-          {{#has deployment.type 'CF'}}
+          {{tag '/isKube' }}
+          {{tag '#isCF' }}
           CF_SPACE: "{{tag 'form.pipeline.parameters.dev-space'}}"
           CF_ORGANIZATION: "{{tag 'form.pipeline.parameters.dev-organization'}}"
           CF_HOSTNAME: "{{tag 'form.pipeline.parameters.cf-host'}}"
@@ -64,7 +64,7 @@ services:
           TF_VAR_ibm_sl_api_key: "{{tag 'form.pipeline.parameters.softlayer-api-key'}}"
           GITLAB_USERNAME: "{{tag 'form.pipeline.parameters.gitlab-username'}}"
           GITLAB_ACCESS_TOKEN: "{{tag 'form.pipeline.parameters.gitlab-access-token'}}"
-          {{/has}}
+          {{tag '/isVSI' }}
           REGION_ID: "{{tag 'form.pipeline.parameters.dev-region'}}"
         execute: true
 
@@ -82,15 +82,15 @@ form:
       toolchain-name: "{{tag 'toolchain-name'}}"
       dev-region: "{{region}}"
       api-key: "{{tag 'api-key'}}"
-      {{#has deployment.type 'Kube'}}
+      {{tag '#isKube' }}
       chart-name: {{deployment.chartName}}
       kube-cluster-name: {{deployment.kubeClusterName}}
       cluster-namespace: {{deployment.kubeClusterNamespace}}
       image-pull-secret-name: "{{tag 'image-pull-secret-name'}}"
       image-registry-token: "{{tag 'image-registry-token'}}"
       registry-namespace: {{deployment.imageRegistryNamespace}}
-      {{/has}}
-      {{#has deployment.type 'CF'}}
+      {{tag '/isKube' }}
+      {{tag '#isCF' }}
       dev-space: "{{space}}"
       dev-organization: "{{org}}"
       cf-host: "{{tag 'cf-host'}}"

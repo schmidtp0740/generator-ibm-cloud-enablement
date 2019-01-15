@@ -65,6 +65,7 @@ module.exports = class extends Generator {
 		this.composeWith(require.resolve('../kubernetes'), this.opts);
 		this.composeWith(require.resolve('../deployment'), this.opts);
 
+		//TODO manage VSI for flexible templates
 		if (_.toLower(this.cloudDeploymentType) === 'vsi') {
 			this.composeWith(require.resolve('../vsi'), this.opts);
 		}
@@ -105,7 +106,7 @@ module.exports = class extends Generator {
 		prompts.push({
 			type: 'input',
 			name: 'deploymentType',
-			message: 'Deployment Type (Kube, CF, or VSI)',
+			message: 'Deployment Type (Kube, CF, CFEE or VSI)',
 			default: path.basename(process.cwd())
 		});
 
