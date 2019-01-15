@@ -9,7 +9,7 @@ stages:
   triggers:
   - type: {{config.triggersType}}
   {{/if}}
-  {{#has deployment.type 'Kube'}}
+  {{tag '#isKube' }}
   properties:
   - name: CHART_NAME
     value: ${CHART_NAME}
@@ -26,16 +26,16 @@ stages:
   - name: HELM_DOWNLOAD_URL
     value: https://kubernetes-helm.storage.googleapis.com/helm-${HELM_VERSION}-linux-amd64.tar.gz
     type: text
-  {{/has}}
+  {{tag '/isKube' }}
   jobs:
   - name: Build
     type: builder
-    {{#missing deployment.type 'Kube'}}
+    {{tag '^isKube' }}
     {{#each config.buildJobProps}}
     {{@key}}: {{{this}}}
     {{/each}}
-    {{/missing}}
-    {{#has deployment.type 'Kube'}}
+    {{tag '/isKube' }}
+    {{tag '#isKube' }}
     build_type: cr
     artifact_dir: ''
     target:
@@ -102,13 +102,13 @@ stages:
       else
         echo "the post_build script does not exist";
       fi
-    {{/has}}
+    {{tag '/isKube' }}
 - name: Deploy Stage
   inputs:
   - type: job
     stage: Build Stage
     job: Build
-  {{#has deployment.type 'Kube'}}
+  {{tag '#isKube' }}
   properties:
   - name: buildProperties
     value: build.properties
@@ -122,7 +122,7 @@ stages:
   - name: IMAGE_REGISTRY_TOKEN
     value: ${IMAGE_REGISTRY_TOKEN}
     type: text
-  {{/has}}
+  {{tag '/isKube' }}
   triggers:
   - type: stage
   jobs:
@@ -130,13 +130,13 @@ stages:
     type: deployer
     target:
       region_id: ${REGION_ID}
-      {{#has deployment.type 'CF'}}
+      {{tag '#isCF' }}
       organization: ${CF_ORGANIZATION}
       space: ${CF_SPACE}
-      {{/has}}
+      {{tag '/isCF' }}
       application: ${CF_APP}
       api_key: ${API_KEY}
-    {{#has deployment.type 'Kube'}}
+      {{tag '#isKube' }}
       kubernetes_cluster: ${KUBE_CLUSTER_NAME}
     script: |-
       #!/bin/bash
@@ -145,8 +145,8 @@ stages:
       source {{{deployment.scriptsDir}}}/kube_deploy.sh
       echo "export IP_ADDR=${IP_ADDR}" >> kube_vars.sh
       echo "export PORT=${PORT}" >> kube_vars.sh
-    {{/has}}
-    {{#has deployment.type 'CF'}}
+      {{tag '/isKube' }}
+    {{tag '#isCF' }}
     script: |-
       #!/bin/bash
       {{#if config.pushCommand}}
@@ -155,7 +155,7 @@ stages:
       cf push "${CF_APP}"
       {{/if}}
       # cf logs "${CF_APP}" --recent
-    {{/has}}
+    {{tag '/isCF' }}
 - name: Health Stage
   inputs:
   - type: job
@@ -165,7 +165,7 @@ stages:
   - type: stage
   permission:
     execute: TOOLCHAIN_ADMINS
-  {{#has deployment.type 'Kube'}}
+  {{tag '#isKube' }}
   properties:
   - name: CLUSTER_NAMESPACE
     value: ${CLUSTER_NAMESPACE}
@@ -211,8 +211,8 @@ stages:
         exit 1;
       fi;
 
-  {{/has}}
-  {{#has deployment.type 'CF'}}
+  {{tag '/isKube' }}
+  {{tag '#isCF' }}
   {{#unless manifest.host}}
   jobs:
   - name: Deploy
@@ -250,4 +250,4 @@ stages:
     test_type: customimage
     docker_image: alpine
   {{/unless}}
-  {{/has}}
+  {{tag '/isCF' }}

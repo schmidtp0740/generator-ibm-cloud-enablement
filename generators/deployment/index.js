@@ -305,6 +305,7 @@ module.exports = class extends Generator {
 			deployment: this.deployment
 		});
 
+		//TODO-- VSI NEEDS A SEPARATE PIPELINE YAML
 		if (Utils.sanitizeAlphaNumLowerCase(this.deployment.type) === "vsi") {
 			this._writeHandlebarsFile('vsi_pipeline_master.yml', '.bluemix/pipeline.yml', {
 				config: this.pipelineConfig,

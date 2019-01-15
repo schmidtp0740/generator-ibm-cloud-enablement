@@ -12,7 +12,7 @@
       "description": "The IBM Cloud region",
       "type": "string"
     },
-    {{#has deployment.type 'CF'}}
+    {{tag '#isCF' }}
     "dev-organization": {
       "description": "The IBM Cloud org",
       "type": "string"
@@ -21,8 +21,8 @@
       "description": "The IBM Cloud space",
       "type": "string"
     },
-    {{/has}}
-    {{#has deployment.type 'Kube'}}
+    {{tag '/isCF' }}
+    {{tag '#isKube' }}
     "image-registry-token": {
       "description": "Container Registry access token. Retrievable via [ibmcloud cr tokens]",
       "type": "string"
@@ -31,8 +31,8 @@
       "description": "Your cluster name. Retrieve it with [ibmcloud cs clusters] or via the console at https://cloud.ibm.com/containers-kubernetes/home/clusters.",
       "type": "string"
     },
-    {{/has}}
-    {{#has deployment.type 'VSI'}}
+    {{tag '/isKube' }}
+    {{tag '#isVSI' }}
     "public-key": {
       "description": "SSH Public Key",
       "type": "string"
@@ -57,13 +57,13 @@
       "description": "GitLab Access Token",
       "type": "password"
     },
-    {{/has}}
+    {{tag '/isVSI' }}
     "app-name": {
       "description": "app name",
       "type": "string"
     }
   },
-  "required": ["dev-region", {{#has deployment.type 'CF'}}"dev-organization", "dev-space",{{/has}} "app-name"{{#has deployment.type 'Kube'}}, "api-key", "image-registry-token", "image-pull-secret-name", "kube-cluster-name"{{/has}}],  "form": [{
+  "required": ["dev-region", {{tag '#isCF' }}"dev-organization", "dev-space",{{tag '/isCF' }} "app-name"{{tag '#isKube' }}, "api-key", "image-registry-token", "image-pull-secret-name", "kube-cluster-name"{{tag '/isKube' }}],  "form": [{
     "type": "validator",
     "url": "/devops/setup/bm-helper/helper.html"
   },
@@ -73,7 +73,7 @@
     "title": "IBM Cloud API Key",
     "key": "api-key"
   },
-  {{#has deployment.type 'Kube'}}
+  {{tag '#isKube' }}
   {
     "type": "password",
     "readonly": false,
@@ -85,8 +85,8 @@
     "title": "Kubernetes Cluster Name",
     "key": "kube-cluster-name"
   },
-  {{/has}}
-  {{#has deployment.type 'VSI'}}
+  {{tag '/isKube' }}
+  {{tag '#isVSI' }}
   {
     "type": "text",
     "readonly": false,
@@ -99,7 +99,7 @@
     "title": "SSH Private Key",
     "key": "private-key"
   },
-  {{/has}}
+  {{tag '/isVSI' }}
   {
     "type": "text",
     "readonly": false,
@@ -107,7 +107,7 @@
     "key": "app-name"
   }, {
     "type": "table",
-    {{#has deployment.type 'CF'}}
+    {{tag '#isCF' }}
     "columnCount": 3,
     "widths": ["28%", "28%", "28%"],
     "items": [{
@@ -130,8 +130,8 @@
       "key": "dev-space",
       "readonly": false
     }]
-    {{/has}}
-    {{#has deployment.type 'Kube'}}
+    {{tag '/isCF' }}
+    {{tag '#isKube' }}
     "columnCount": 1,
     "widths": ["28%"],
     "items": [{
@@ -141,8 +141,8 @@
       "type": "select",
       "key": "dev-region"
     }]
-    {{/has}}
-    {{#has deployment.type 'VSI'}}
+    {{tag '/isKube' }}
+    {{tag '#isVSI' }}
     "type": "table",
     "columnCount": 2,
     "widths": ["28%", "28%"],
@@ -171,6 +171,6 @@
       "type": "label",
       "key": "GitLab Access Token"
     }]
-    {{/has}}
+    {{tag '/isVSI' }}
   }]
 }
