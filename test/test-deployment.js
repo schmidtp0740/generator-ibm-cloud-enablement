@@ -120,6 +120,41 @@ describe('cloud-enablement:deployment', function () {
 	});
 	
 	languages.forEach(lang => {
+		let cfeeOptions = {
+			bluemix: JSON.stringify(scaffolderSample.getJsonServerWithDeployment(lang, 'CFEE'))
+		};
+		// if(lang === 'JAVA' || lang === 'SPRING') {
+		// 	cfOptions.artifactId = 'testArtifact-id';
+		// 	cfOptions.version = '0.0.1-SNAPSHOT';
+		// }
+
+		describe(`cloud-enablement:deployment CFEE for language ${lang}`, function () {
+			beforeEach(function () {
+				return helpers.run(path.join(__dirname, '../generators/app'))
+					.inDir(path.join(__dirname, './tmp'))
+					.withOptions(cfeeOptions);
+			});
+
+			it('has all files', function () {
+				assert.file('.bluemix/toolchain.yml');
+				assert.file('.bluemix/pipeline.yml');
+				assert.file('.bluemix/deploy.json');
+				assert.file('.bluemix/scripts/container_build.sh');
+				assert.file('.bluemix/scripts/kube_deploy.sh');
+			});
+
+			it('has toolchain.yml with correct content', function () {
+				assert.fileContent('.bluemix/toolchain.yml', toolchainCFEESample);
+			});
+
+			it('has pipeline.yml with correct content', function () {
+				assert.fileContent('.bluemix/pipeline.yml', pipelineCFEESample);
+			});
+
+		});
+	});
+
+	languages.forEach(lang => {
 		let kubeOptions = {
 			bluemix: JSON.stringify(scaffolderSample.getJsonServerWithDeployment(lang, 'Kube'))
 		};

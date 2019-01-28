@@ -21,8 +21,8 @@
       "description": "The IBM Cloud space",
       "type": "string"
     },
-    {{/has}}
-    {{#has deployment.type 'CFEE'}}
+    {{tag '/isCF' }}
+    {{tag '#isCFEE' }}
     "dev-organization": {
       "description": "The IBM Cloud org",
       "type": "string"
@@ -31,8 +31,8 @@
       "description": "The IBM Cloud space",
       "type": "string"
     },
-    {{/has}}
-    {{#has deployment.type 'Kube'}}
+    {{tag '/isCFEE' }}
+    {{tag '#isKube' }}
     "image-registry-token": {
       "description": "Container Registry access token. Retrievable via [ibmcloud cr tokens]",
       "type": "string"
@@ -73,7 +73,7 @@
       "type": "string"
     }
   },
-  "required": ["dev-region", {{#has deployment.type 'CF'}}"dev-organization", "dev-space",{{/has}} {{#has deployment.type 'CFEE'}}"dev-organization", "dev-space",{{/has}} "app-name"{{#has deployment.type 'Kube'}}, "api-key", "image-registry-token", "image-pull-secret-name", "kube-cluster-name"{{/has}}],  "form": [{
+  "required": ["dev-region", {{tag '#isCF' }}"dev-organization", "dev-space",{{tag '/isCF' }} {{tag '#isCFEE' }}"dev-organization", "dev-space",{{tag '/isCFEE' }} "app-name"{{tag '#isKube' }}, "api-key", "image-registry-token", "image-pull-secret-name", "kube-cluster-name"{{tag '/isKube' }}],  "form": [{
     "type": "validator",
     "url": "/devops/setup/bm-helper/helper.html"
   },
@@ -89,7 +89,8 @@
     "readonly": false,
     "title": "Container Registry access token",
     "key": "image-registry-token"
-  }, {
+  },
+  {
     "type": "text",
     "readonly": false,
     "title": "Kubernetes Cluster Name",
@@ -115,96 +116,122 @@
     "readonly": false,
     "title": "App Name",
     "key": "app-name"
-  }, {
+  },
+  {
     "type": "table",
     {{tag '#isCF' }}
     "columnCount": 3,
     "widths": ["28%", "28%", "28%"],
-    "items": [{
-      "type": "label",
-      "title": "Region"
-    }, {
-      "type": "label",
-      "title": "Organization"
-    }, {
-      "type": "label",
-      "title": "Space"
-    }, {
-      "type": "select",
-      "key": "dev-region"
-    }, {
-      "type": "select",
-      "key": "dev-organization"
-    }, {
-      "type": "select",
-      "key": "dev-space",
-      "readonly": false
-    }]
-    {{/has}}
-    {{#has deployment.type 'CFEE'}}
+    "items": [
+      {
+        "type": "label",
+        "title": "Region"
+      },
+      {
+        "type": "label",
+        "title": "Organization"
+      },
+      {
+        "type": "label",
+        "title": "Space"
+      },
+      {
+        "type": "select",
+        "key": "dev-region"
+      },
+      {
+        "type": "select",
+        "key": "dev-organization"
+      },
+      {
+        "type": "select",
+        "key": "dev-space",
+        "readonly": false
+      }
+    ]
+    {{tag '/isCF' }}
+    {{tag '#isCFEE' }}
     "columnCount": 3,
     "widths": ["28%", "28%", "28%"],
-    "items": [{
-      "type": "label",
-      "title": "Region"
-    }, {
-      "type": "label",
-      "title": "Organization"
-    }, {
-      "type": "label",
-      "title": "Space"
-    }, {
-      "type": "select",
-      "key": "dev-region"
-    }, {
-      "type": "select",
-      "key": "dev-organization"
-    }, {
-      "type": "select",
-      "key": "dev-space",
-      "readonly": false
-    }]
-    {{/has}}
-    {{#has deployment.type 'Kube'}}
+    "items": [
+      {
+        "type": "label",
+        "title": "Region"
+      },
+      {
+        "type": "label",
+        "title": "Organization"
+      },
+      {
+        "type": "label",
+        "title": "Space"
+      },
+      {
+        "type": "select",
+        "key": "dev-region"
+      },
+      {
+        "type": "select",
+        "key": "dev-organization"
+      },
+      {
+        "type": "select",
+        "key": "dev-space",
+        "readonly": false
+      }
+    ]
+    {{tag '/isCFEE' }}
+    {{tag '#isKube' }}
     "columnCount": 1,
     "widths": ["28%"],
-    "items": [{
-      "type": "label",
-      "title": "Region"
-    }, {
-      "type": "select",
-      "key": "dev-region"
-    }]
+    "items": [
+      {
+        "type": "label",
+        "title": "Region"
+      },
+      {
+        "type": "select",
+        "key": "dev-region"
+      }
+    ]
     {{tag '/isKube' }}
     {{tag '#isVSI' }}
-    "type": "table",
     "columnCount": 2,
     "widths": ["28%", "28%"],
-    "items": [{
-      "type": "text",
-      "key": "softlayer-username"
-    },{
-      "type": "password",
-      "key": "softlayer-api-key"
-    },{
-      "type": "label",
-      "title": "SoftLayer Username"
-    },{
-      "type": "label",
-      "key": "SoftLayer API Key"
-    },{
-      "type": "text",
-      "key": "gitlab-username"
-    },{
-      "type": "password",
-      "key": "gitlab-access-token"
-    },{
-      "type": "label",
-      "title": "GitLab Username"
-    },{
-      "type": "label",
-      "key": "GitLab Access Token"
-    }]
+    "items": [
+      {
+        "type": "text",
+        "key": "softlayer-username"
+      },
+      {
+        "type": "password",
+        "key": "softlayer-api-key"
+      },
+      {
+        "type": "label",
+        "title": "SoftLayer Username"
+      },
+      {
+        "type": "label",
+        "key": "SoftLayer API Key"
+      },
+      {
+        "type": "text",
+        "key": "gitlab-username"
+      },
+      {
+        "type": "password",
+        "key": "gitlab-access-token"
+      },
+      {
+        "type": "label",
+        "title": "GitLab Username"
+      },
+      {
+        "type": "label",
+        "key": "GitLab Access Token"
+      }
+    ]
     {{tag '/isVSI' }}
   }]
 }
