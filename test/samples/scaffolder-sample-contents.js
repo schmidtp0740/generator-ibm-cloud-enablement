@@ -19,6 +19,7 @@
 class scaffolderSample {
 	fullContents() {
 		return {
+			"isCF": true,
 			"analytics": {
 				"apiKey": "ff12d70f-78bc-4db3-8d02-9c076996d15f",
 				"serviceInfo": {
