@@ -46,12 +46,16 @@ services:
           {{tag '#isCF' }}
           CF_SPACE: "{{tag 'form.pipeline.parameters.dev-space'}}"
           CF_ORGANIZATION: "{{tag 'form.pipeline.parameters.dev-organization'}}"
+          CF_HOSTNAME: "{{tag 'form.pipeline.parameters.cf-host'}}"
+          CF_DOMAIN: "{{tag 'form.pipeline.parameters.cf-domain'}}"
           {{tag '/isCF' }}
           {{tag '#isCFEE' }}
           CF_SPACE: "{{tag 'form.pipeline.parameters.dev-space'}}"
           CF_ORGANIZATION: "{{tag 'form.pipeline.parameters.dev-organization'}}"
           CFEE_ENV: "{{tag 'form.pipeline.parameters.cfee-env'}}"
           CFEE_HOST: "{{tag 'form.pipeline.parameters.cfee-host'}}"
+          CF_HOSTNAME: "{{tag 'form.pipeline.parameters.cfee-hostname'}}"
+          CF_DOMAIN: "{{tag 'form.pipeline.parameters.cfee-domain'}}"
           {{tag '/isCFEE' }}
           {{tag '#isVSI' }}
           PUBLIC_KEY: "{{tag 'form.pipeline.parameters.public-key'}}"
@@ -74,7 +78,8 @@ form:
     schema:
       $ref: deploy.json
     parameters:
-      app-name: "{{name}}"
+      app-name: "{{tag 'app-name'}}"
+      toolchain-name: "{{tag 'toolchain-name'}}"
       dev-region: "{{region}}"
       api-key: "{{tag 'api-key'}}"
       {{tag '#isKube' }}
@@ -88,12 +93,16 @@ form:
       {{tag '#isCF' }}
       dev-space: "{{space}}"
       dev-organization: "{{org}}"
+      cf-host: "{{tag 'cf-host'}}"
+      cf-domain: "{{tag 'cf-domain'}}"
       {{tag '/isCF' }}
       {{tag '#isCFEE' }}
       dev-space: "{{space}}"
       dev-organization: "{{org}}"
       cfee-env: "{{tag 'cfee-env'}}"
       cfee-host: "{{tag 'cfee-host'}}"
+      cfee-hostname: "{{tag 'cfee-hostname'}}"
+      cfee-domain: "{{tag 'cfee-domain'}}"
       {{tag '/isCFEE' }}
       {{tag '#isVSI' }}
       public-key: "{{tag 'ssh-public-key'}}"

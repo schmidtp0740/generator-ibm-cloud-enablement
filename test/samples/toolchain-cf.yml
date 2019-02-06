@@ -35,10 +35,35 @@ services:
           REPO: repo
           CF_APP: "{{form.pipeline.parameters.app-name}}"
           API_KEY: "{{form.pipeline.parameters.api-key}}"
+          {{#isKube}}
+          CHART_NAME: "{{form.pipeline.parameters.chart-name}}"
+          KUBE_CLUSTER_NAME: "{{form.pipeline.parameters.kube-cluster-name}}"
+          CLUSTER_NAMESPACE: "{{form.pipeline.parameters.cluster-namespace}}"
+          IMAGE_REGISTRY_TOKEN: "{{form.pipeline.parameters.image-registry-token}}"
+          REGISTRY_NAMESPACE: "{{form.pipeline.parameters.registry-namespace}}"
+          {{/isKube}}
+          {{#isCF}}
           CF_SPACE: "{{form.pipeline.parameters.dev-space}}"
           CF_ORGANIZATION: "{{form.pipeline.parameters.dev-organization}}"
           CF_HOSTNAME: "{{form.pipeline.parameters.cf-host}}"
           CF_DOMAIN: "{{form.pipeline.parameters.cf-domain}}"
+          {{/isCF}}
+          {{#isCFEE}}
+          CF_SPACE: "{{form.pipeline.parameters.dev-space}}"
+          CF_ORGANIZATION: "{{form.pipeline.parameters.dev-organization}}"
+          CFEE_ENV: "{{form.pipeline.parameters.cfee-env}}"
+          CFEE_HOST: "{{form.pipeline.parameters.cfee-host}}"
+          CF_HOSTNAME: "{{form.pipeline.parameters.cfee-hostname}}"
+          CF_DOMAIN: "{{form.pipeline.parameters.cfee-domain}}"
+          {{/isCFEE}}
+          {{#isVSI}}
+          PUBLIC_KEY: "{{form.pipeline.parameters.public-key}}"
+          PRIVATE_KEY: "{{form.pipeline.parameters.private-key}}"
+          TF_VAR_ibm_sl_username: "{{form.pipeline.parameters.softlayer-username}}"
+          TF_VAR_ibm_sl_api_key: "{{form.pipeline.parameters.softlayer-api-key}}"
+          GITLAB_USERNAME: "{{form.pipeline.parameters.gitlab-username}}"
+          GITLAB_ACCESS_TOKEN: "{{form.pipeline.parameters.gitlab-access-token}}"
+          {{/isVSI}}
           REGION_ID: "{{form.pipeline.parameters.dev-region}}"
         execute: true
 
@@ -56,7 +81,33 @@ form:
       toolchain-name: "{{toolchain-name}}"
       dev-region: "{{region}}"
       api-key: "{{api-key}}"
+      {{#isKube}}
+      chart-name: myapplication
+      kube-cluster-name: 
+      cluster-namespace: default
+      image-pull-secret-name: "{{image-pull-secret-name}}"
+      image-registry-token: "{{image-registry-token}}"
+      registry-namespace: my_registry_ns
+      {{/isKube}}
+      {{#isCF}}
       dev-space: "{{space}}"
       dev-organization: "{{organization}}"
       cf-host: "{{cf-host}}"
       cf-domain: "{{cf-domain}}"
+      {{/isCF}}
+      {{#isCFEE}}
+      dev-space: "{{space}}"
+      dev-organization: "{{organization}}"
+      cfee-env: "{{cfee-env}}"
+      cfee-host: "{{cfee-host}}"
+      cfee-hostname: "{{cfee-hostname}}"
+      cfee-domain: "{{cfee-domain}}"
+      {{/isCFEE}}
+      {{#isVSI}}
+      public-key: "{{ssh-public-key}}"
+      private-key: "{{ssh-private-key}}"
+      softlayer-username: "{{softlayer-username}}"
+      softlayer-api-key: "{{softlayer-api-key}}"
+      gitlab-username: "{{gitlab-username}}"
+      gitlab-access-token: "{{gitlab-access-token}}"
+      {{/isVSI}}
