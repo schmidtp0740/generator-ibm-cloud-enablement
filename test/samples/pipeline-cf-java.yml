@@ -67,7 +67,6 @@ stages:
       echo "Java build finished, setting LOG_DIR back to original"
       LOG_DIR=$LOG_DIR_TEMP
       echo "LOG_DIR: ${LOG_DIR}"
-
       mkdir downloads
       PATH="downloads:$PATH"
 

@@ -67,7 +67,6 @@ stages:
       cat Dockerfile >> Dockerfile-tools
       mv Dockerfile-tools Dockerfile
       {{/if}}
-
       mkdir downloads
       PATH="downloads:$PATH"
 

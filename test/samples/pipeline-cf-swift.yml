@@ -57,7 +57,6 @@ stages:
       sed -i 's/COPY.*/COPY --from=0 \/swift-project .\/swift-project/' Dockerfile
       cat Dockerfile >> Dockerfile-tools
       mv Dockerfile-tools Dockerfile
-
       mkdir downloads
       PATH="downloads:$PATH"
 

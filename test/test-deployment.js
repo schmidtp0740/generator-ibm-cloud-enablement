@@ -26,14 +26,15 @@ const scaffolderSample = require('./samples/scaffolder-sample');
 // const pipelineKubeSampleJava = fs.readFileSync(path.join(__dirname, 'samples/pipeline-kube-java.yml'), 'utf-8');
 // const toolchainKubeSample = fs.readFileSync(path.join(__dirname, 'samples/toolchain-kube.yml'), 'utf-8');
 
-// const pipelineCFSample = fs.readFileSync(path.join(__dirname, 'samples/pipeline-cf.yml'), 'utf-8');
+const pipelineCFSample = fs.readFileSync(path.join(__dirname, 'samples/pipeline-cf.yml'), 'utf-8');
 // const pipelineCFEESample = fs.readFileSync(path.join(__dirname, 'samples/pipeline-cfee.yml'), 'utf-8');
 const pipelineCFSampleJava = fs.readFileSync(path.join(__dirname, 'samples/pipeline-cf-java.yml'), 'utf-8');
 const pipelineCFSampleSpring = fs.readFileSync(path.join(__dirname, 'samples/pipeline-cf-spring.yml'), 'utf-8');
 const pipelineCFSampleSwift = fs.readFileSync(path.join(__dirname, 'samples/pipeline-cf-swift.yml'), 'utf-8');
+const pipelineCFSampleGo = fs.readFileSync(path.join(__dirname, 'samples/pipeline-cf-go.yml'), 'utf-8');
 const toolchainCFSample = fs.readFileSync(path.join(__dirname, 'samples/toolchain-cf.yml'), 'utf-8');
 // const toolchainCFEESample = fs.readFileSync(path.join(__dirname, 'samples/toolchain-cfee.yml'), 'utf-8');
-// const deployCFSample = fs.readFileSync(path.join(__dirname, 'samples/deploy-cf.json'), 'utf-8');
+const deployCFSample = fs.readFileSync(path.join(__dirname, 'samples/deploy-cf.json'), 'utf-8');
 
 // const applicationName = 'AcmeProject'; // from sample json files
 // const chartLocation = 'chart/' + applicationName.toLowerCase();
@@ -78,16 +79,16 @@ describe('cloud-enablement:deployment', function () {
 					assert.fileContent('.bluemix/pipeline.yml', pipelineCFSampleSpring);
 				} else if (lang === 'SWIFT') {
 					assert.fileContent('.bluemix/pipeline.yml', pipelineCFSampleSwift);
-				} 
-                //else {
-				// 	assert.fileContent('.bluemix/pipeline.yml', pipelineCFSample);
-				// }
+				} else if (lang === 'GO') {
+					assert.fileContent('.bluemix/pipeline.yml', pipelineCFSampleGo);
+				} else {
+					assert.fileContent('.bluemix/pipeline.yml', pipelineCFSample);
+				}
 			});
 
-			// it('has deploy.json with correct content', function () {
-			// 	let deployJson = JSON.parse(fs.readFileSync('.bluemix/deploy.json', 'utf8'));
-			// 	assert.deepEqual(deployJson, JSON.parse(deployCFSample));
-			// });
+			it('has deploy.json with correct content', function () {
+				assert.fileContent('.bluemix/deploy.json', deployCFSample);
+			});
 		});
 	});
 
