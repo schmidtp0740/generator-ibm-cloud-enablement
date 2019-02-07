@@ -83,8 +83,8 @@ form:
       api-key: "{{api-key}}"
       {{#isKube}}
       chart-name: myapplication
-      kube-cluster-name: my_kube_cluster
-      cluster-namespace: my_kube_namespace
+      kube-cluster-name: 
+      cluster-namespace: default
       image-pull-secret-name: "{{image-pull-secret-name}}"
       image-registry-token: "{{image-registry-token}}"
       registry-namespace: my_registry_ns
@@ -102,7 +102,7 @@ form:
       cfee-host: "{{cfee-host}}"
       cfee-hostname: "{{cfee-hostname}}"
       cfee-domain: "{{cfee-domain}}"
-      {{#isCFEE}}
+      {{/isCFEE}}
       {{#isVSI}}
       public-key: "{{ssh-public-key}}"
       private-key: "{{ssh-private-key}}"

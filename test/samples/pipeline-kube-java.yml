@@ -30,9 +30,8 @@ stages:
   - name: Build
     type: builder
     {{^isKube}}
-    artifact_dir: ''
     build_type: shell
-    script: |-
+    script: |
       #!/bin/bash
       export JAVA_HOME=$JAVA8_HOME
       gradle build
@@ -68,7 +67,6 @@ stages:
       echo "Java build finished, setting LOG_DIR back to original"
       LOG_DIR=$LOG_DIR_TEMP
       echo "LOG_DIR: ${LOG_DIR}"
-
       mkdir downloads
       PATH="downloads:$PATH"
 
@@ -259,7 +257,7 @@ stages:
     service: ${REPO}
   properties:
   - name: VI_INSTANCE_NAME
-    value: testFlextToolchain
+    value: my-application
     type: text
   - name: PUBLIC_KEY
     value: "${PUBLIC_KEY}"
@@ -343,9 +341,9 @@ stages:
       # package app for VSI deployment
       apt-get update && apt-get install -y build-essential debhelper fakeroot
       bash terraform/scripts/build.sh
-      dpkg-buildpackage -rfakeroot -us -uc -b && mv ../testflexttoolchain-0.0_1-1_all.deb terraform/testFlextToolchain-0.0_1-1_all.deb
-      if [ ! -f terraform/testFlextToolchain-0.0_1-1_all.deb ]; then echo "Debian package was not successfully created."; exit 1; fi
-    docker_image: node:8
+      dpkg-buildpackage -rfakeroot -us -uc -b && mv ../myapplication-0.0_1-1_all.deb terraform/my-application-0.0_1-1_all.deb
+      if [ ! -f terraform/my-application-0.0_1-1_all.deb ]; then echo "Debian package was not successfully created."; exit 1; fi
+    docker_image: maven:3-jdk-8
 - name: Terraform Plan Stage
   inputs:
   - type: job
@@ -412,7 +410,7 @@ stages:
       apk add --no-cache openssh rsync
       VSI_HOST=$(cat hostip.txt)
       ssh -o StrictHostKeyChecking=no -i ssh_private_key root@$VSI_HOST "apt-get update; apt-get install rsync; mkdir -p app"
-      rsync -arv -e "ssh -i ssh_private_key" testFlextToolchain-0.0_1-1_all.deb root@$VSI_HOST:app
+      rsync -arv -e "ssh -i ssh_private_key" my-application-0.0_1-1_all.deb root@$VSI_HOST:app
     docker_image: alpine
   - name: Install
     type: builder
@@ -422,7 +420,7 @@ stages:
       #!/bin/bash
       set -eo pipefail
       VSI_HOST=$(cat hostip.txt)
-      ssh -o StrictHostKeyChecking=no -i ssh_private_key root@$VSI_HOST "rm -rf /usr/src/testFlextToolchain; cd app; dpkg -i testFlextToolchain-0.0_1-1_all.deb; cd /usr/src/testFlextToolchain; source install.sh"
+      ssh -o StrictHostKeyChecking=no -i ssh_private_key root@$VSI_HOST "rm -rf /usr/src/my-application; cd app; dpkg -i my-application-0.0_1-1_all.deb; cd /usr/src/my-application; source install.sh"
   - name: Start
     type: builder
     artifact_dir: ''
@@ -431,8 +429,8 @@ stages:
       #!/bin/bash
       set -eo pipefail
       VSI_HOST=$(cat hostip.txt)
-      ssh -o StrictHostKeyChecking=no -i ssh_private_key root@$VSI_HOST "cd /usr/src/testFlextToolchain; nohup bash start.sh &> output.log &"
-      ssh -o StrictHostKeyChecking=no -i ssh_private_key root@$VSI_HOST "cd /usr/src/testFlextToolchain; cat output.log"
+      ssh -o StrictHostKeyChecking=no -i ssh_private_key root@$VSI_HOST "cd /usr/src/my-application; nohup bash start.sh &> output.log &"
+      ssh -o StrictHostKeyChecking=no -i ssh_private_key root@$VSI_HOST "cd /usr/src/my-application; cat output.log"
 - name: Health Check Stage
   inputs:
   - type: job
@@ -448,11 +446,11 @@ stages:
       set -eo pipefail
       apk add --no-cache curl openssh
       VSI_HOST=$(cat hostip.txt)
-      PORT='3000'
+      PORT='9080'
       if [ $(curl -sL -w "%{http_code}\\n" "http://${VSI_HOST}:${PORT}/health" -o /dev/null --connect-timeout 3 --max-time 5 --retry 3 --retry-max-time 30) == "200" ]; then
         echo "Successfully reached health endpoint: http://${VSI_HOST}:${PORT}/health"
         echo "====================================================================="
-        ssh -o StrictHostKeyChecking=no -i ssh_private_key root@$VSI_HOST "cd /usr/src/testFlextToolchain; sed -i 's/localhost/${VSI_HOST}/g' output.log; sed -i 's/0.0.0.0/${VSI_HOST}/g' output.log; sed -i 's/127.0.0.1/${VSI_HOST}/g' output.log; cat output.log"
+        ssh -o StrictHostKeyChecking=no -i ssh_private_key root@$VSI_HOST "cd /usr/src/my-application; sed -i 's/localhost/${VSI_HOST}/g' output.log; sed -i 's/0.0.0.0/${VSI_HOST}/g' output.log; sed -i 's/127.0.0.1/${VSI_HOST}/g' output.log; cat output.log"
       else
         echo "Could not reach health endpoint: http://${VSI_HOST}:${PORT}/health"
         exit 1;

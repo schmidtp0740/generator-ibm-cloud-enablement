@@ -21,23 +21,23 @@ const fs = require('fs');
 
 const scaffolderSample = require('./samples/scaffolder-sample');
 
-// const pipelineKubeSample = fs.readFileSync(path.join(__dirname, 'samples/pipeline-kube.yml'), 'utf-8');
-// const pipelineKubeSampleSwift = fs.readFileSync(path.join(__dirname, 'samples/pipeline-kube-swift.yml'), 'utf-8');
-// const pipelineKubeSampleJava = fs.readFileSync(path.join(__dirname, 'samples/pipeline-kube-java.yml'), 'utf-8');
-// const toolchainKubeSample = fs.readFileSync(path.join(__dirname, 'samples/toolchain-kube.yml'), 'utf-8');
+const pipelineKubeSample = fs.readFileSync(path.join(__dirname, 'samples/pipeline-kube.yml'), 'utf-8');
+const pipelineKubeSampleSwift = fs.readFileSync(path.join(__dirname, 'samples/pipeline-kube-swift.yml'), 'utf-8');
+const pipelineKubeSampleJava = fs.readFileSync(path.join(__dirname, 'samples/pipeline-kube-java.yml'), 'utf-8');
+const toolchainKubeSample = fs.readFileSync(path.join(__dirname, 'samples/toolchain-kube.yml'), 'utf-8');
 
 const pipelineCFSample = fs.readFileSync(path.join(__dirname, 'samples/pipeline-cf.yml'), 'utf-8');
-// const pipelineCFEESample = fs.readFileSync(path.join(__dirname, 'samples/pipeline-cfee.yml'), 'utf-8');
+const pipelineCFEESample = fs.readFileSync(path.join(__dirname, 'samples/pipeline-cfee.yml'), 'utf-8');
 const pipelineCFSampleJava = fs.readFileSync(path.join(__dirname, 'samples/pipeline-cf-java.yml'), 'utf-8');
 const pipelineCFSampleSpring = fs.readFileSync(path.join(__dirname, 'samples/pipeline-cf-spring.yml'), 'utf-8');
 const pipelineCFSampleSwift = fs.readFileSync(path.join(__dirname, 'samples/pipeline-cf-swift.yml'), 'utf-8');
 const pipelineCFSampleGo = fs.readFileSync(path.join(__dirname, 'samples/pipeline-cf-go.yml'), 'utf-8');
 const toolchainCFSample = fs.readFileSync(path.join(__dirname, 'samples/toolchain-cf.yml'), 'utf-8');
-// const toolchainCFEESample = fs.readFileSync(path.join(__dirname, 'samples/toolchain-cfee.yml'), 'utf-8');
+const toolchainCFEESample = fs.readFileSync(path.join(__dirname, 'samples/toolchain-cfee.yml'), 'utf-8');
 const deployCFSample = fs.readFileSync(path.join(__dirname, 'samples/deploy-cf.json'), 'utf-8');
 
-// const applicationName = 'AcmeProject'; // from sample json files
-// const chartLocation = 'chart/' + applicationName.toLowerCase();
+const applicationName = 'AcmeProject'; // from sample json files
+const chartLocation = 'chart/' + applicationName.toLowerCase();
 
 describe('cloud-enablement:deployment', function () {
 	this.timeout(5000);
@@ -48,6 +48,7 @@ describe('cloud-enablement:deployment', function () {
 		let cfOptions = {
 			bluemix: JSON.stringify(scaffolderSample.getJsonServerWithDeployment(lang, 'CF'))
 		};
+
 		if (lang === 'JAVA' || lang === 'SPRING') {
 			cfOptions.artifactId = 'testArtifact-id';
 			cfOptions.version = '0.0.1-SNAPSHOT';
@@ -92,138 +93,84 @@ describe('cloud-enablement:deployment', function () {
 		});
 	});
 
-	// let cfeeOptions = {
-	// 	bluemix: JSON.stringify(scaffolderSample.getJsonServerWithDeployment('NODE', 'CFEE'))
-	// };
+	let cfeeOptions = {
+		bluemix: JSON.stringify(scaffolderSample.getJsonServerWithDeployment('NODE', 'CFEE'))
+	};
 	
-	// describe(`cloud-enablement:deployment CFEE for language Node`, function () {
-	// 	beforeEach(function () {
-	// 		return helpers.run(path.join(__dirname, '../generators/app'))
-	// 			.inDir(path.join(__dirname, './tmp'))
-	// 			.withOptions(cfeeOptions);
-	// 	});
+	describe(`cloud-enablement:deployment CFEE for language Node`, function () {
+		beforeEach(function () {
+			return helpers.run(path.join(__dirname, '../generators/app'))
+				.inDir(path.join(__dirname, './tmp'))
+				.withOptions(cfeeOptions);
+		});
 
-	// 	it('has all files', function () {
-	// 		assert.file('.bluemix/toolchain.yml');
-	// 		assert.file('.bluemix/pipeline.yml');
-	// 		assert.file('.bluemix/deploy.json');
-	// 		assert.file('.bluemix/scripts/container_build.sh');
-	// 		assert.file('.bluemix/scripts/kube_deploy.sh');
-	// 	});
+		it('has all files', function () {
+			assert.file('.bluemix/toolchain.yml');
+			assert.file('.bluemix/pipeline.yml');
+			assert.file('.bluemix/deploy.json');
+			assert.file('.bluemix/scripts/container_build.sh');
+			assert.file('.bluemix/scripts/kube_deploy.sh');
+		});
 
-	// 	it('has toolchain.yml with correct content', function () {
-	// 		assert.fileContent('.bluemix/toolchain.yml', toolchainCFEESample);
-	// 	});
+		it('has toolchain.yml with correct content', function () {
+			assert.fileContent('.bluemix/toolchain.yml', toolchainCFEESample);
+		});
 
-	// 	it('has pipeline.yml with correct content', function () {
-	// 		assert.fileContent('.bluemix/pipeline.yml', pipelineCFEESample);
-	// 	});
+		it('has pipeline.yml with correct content', function () {
+			assert.fileContent('.bluemix/pipeline.yml', pipelineCFEESample);
+		});
 
-	// });
+	});
+
+	languages = ['NODE', 'JAVA', 'SWIFT'];
 	
-	// languages.forEach(lang => {
-	// 	let cfeeOptions = {
-	// 		bluemix: JSON.stringify(scaffolderSample.getJsonServerWithDeployment(lang, 'CFEE'))
-	// 	};
-	// 	// if(lang === 'JAVA' || lang === 'SPRING') {
-	// 	// 	cfOptions.artifactId = 'testArtifact-id';
-	// 	// 	cfOptions.version = '0.0.1-SNAPSHOT';
-	// 	// }
+	languages.forEach(lang => {
+		let kubeOptions = {
+			bluemix: JSON.stringify(scaffolderSample.getJsonServerWithDeployment(lang, 'Kube'))
+		};
 
-	// 	describe(`cloud-enablement:deployment CFEE for language ${lang}`, function () {
-	// 		beforeEach(function () {
-	// 			return helpers.run(path.join(__dirname, '../generators/app'))
-	// 				.inDir(path.join(__dirname, './tmp'))
-	// 				.withOptions(cfeeOptions);
-	// 		});
+		if (lang === 'JAVA' || lang === 'SPRING') {
+			kubeOptions.artifactId = 'testArtifact-id';
+			kubeOptions.version = '0.0.1-SNAPSHOT';
+		}
 
-	// 		it('has all files', function () {
-	// 			assert.file('.bluemix/toolchain.yml');
-	// 			assert.file('.bluemix/pipeline.yml');
-	// 			assert.file('.bluemix/deploy.json');
-	// 			assert.file('.bluemix/scripts/container_build.sh');
-	// 			assert.file('.bluemix/scripts/kube_deploy.sh');
-	// 		});
+		describe(`cloud-enablement:deployment Kube for language ${lang}`, function () {
+			beforeEach(function () {
+				return helpers.run(path.join(__dirname, '../generators/app'))
+					.inDir(path.join(__dirname, './tmp'))
+					.withOptions(kubeOptions);
+			});
 
-	// 		it('has toolchain.yml with correct content', function () {
-	// 			assert.fileContent('.bluemix/toolchain.yml', toolchainCFEESample);
-	// 		});
+			it('has all files', function () {
+				assert.file('.bluemix/toolchain.yml');
+				assert.file('.bluemix/pipeline.yml');
+				assert.file('.bluemix/deploy.json');
+				assert.file('.bluemix/scripts/container_build.sh');
+				assert.file('.bluemix/scripts/kube_deploy.sh');
+			});
 
-	// 		it('has pipeline.yml with correct content', function () {
-	// 			assert.fileContent('.bluemix/pipeline.yml', pipelineCFEESample);
-	// 		});
+			it('has toolchain.yml with correct content', function () {
+				assert.fileContent('.bluemix/toolchain.yml', toolchainKubeSample);
+			});
 
-	// 	});
-	// });
+			it('has pipeline.yml with correct content', function () {
+				if (lang === 'JAVA' || lang === 'SPRING') {
+					assert.fileContent('.bluemix/pipeline.yml', pipelineKubeSampleJava);
+				} else if (lang === 'SWIFT') {
+					assert.fileContent('.bluemix/pipeline.yml', pipelineKubeSampleSwift);
+				} else if (lang === 'NODE') {
+					assert.fileContent('.bluemix/pipeline.yml', pipelineKubeSample);
+				}
+			});
 
-	// languages.forEach(lang => {
-	// 	let kubeOptions = {
-	// 		bluemix: JSON.stringify(scaffolderSample.getJsonServerWithDeployment(lang, 'Kube'))
-	// 	};
+			it('has deploy.json with correct content', function () {
+				assert.fileContent('.bluemix/deploy.json', deployCFSample);
+			});
 
-	// 	describe(`cloud-enablement:deployment Kube for language ${lang}`, function () {
-	// 		beforeEach(function () {
-	// 			return helpers.run(path.join(__dirname, '../generators/app'))
-	// 				.inDir(path.join(__dirname, './tmp'))
-	// 				.withOptions(kubeOptions);
-	// 		});
-
-	// 		it('has all files', function () {
-	// 			assert.file('.bluemix/toolchain.yml');
-	// 			assert.file('.bluemix/pipeline.yml');
-	// 			assert.file('.bluemix/deploy.json');
-	// 			assert.file('.bluemix/scripts/container_build.sh');
-	// 			assert.file('.bluemix/scripts/kube_deploy.sh');
-	// 		});
-
-	// 		it('has toolchain.yml with correct content', function () {
-	// 			assert.fileContent('.bluemix/toolchain.yml', toolchainKubeSample);
-	// 		});
-
-	// 		it('has pipeline.yml with correct content', function () {
-	// 			if (lang === 'JAVA' || lang === 'SPRING') {
-	// 				assert.fileContent('.bluemix/pipeline.yml', pipelineKubeSampleJava);
-	// 			} else if (lang === 'SWIFT') {
-	// 				assert.fileContent('.bluemix/pipeline.yml', pipelineKubeSampleSwift);
-	// 			} else {
-	// 				assert.fileContent('.bluemix/pipeline.yml', pipelineKubeSample);
-	// 			}
-	// 		});
-
-	// 		it('has deploy.json with correct content', function () {
-	// 			let deployJson = JSON.parse(fs.readFileSync('.bluemix/deploy.json', 'utf8'));
-
-	// 			let properties = deployJson.properties;
-	// 			assert(properties['api-key']);
-	// 			assert(properties['image-registry-token']);
-	// 			assert(properties['kube-cluster-name']);
-
-	// 			assert(deployJson.required);
-	// 			assert(deployJson.required.includes('api-key'));
-	// 			assert(deployJson.required.includes('image-registry-token'));
-	// 			assert(deployJson.required.includes('kube-cluster-name'));
-
-	// 			let form = deployJson.form;
-	// 			let formApiKey = form.find(function (val) {
-	// 				return val.key === 'api-key';
-	// 			});
-	// 			assert(formApiKey);
-
-	// 			let formRegistryToken = form.find(function (val) {
-	// 				return val.key === 'image-registry-token';
-	// 			});
-	// 			assert(formRegistryToken);
-
-	// 			let clusterName = form.find(function (val) {
-	// 				return val.key === 'kube-cluster-name';
-	// 			});
-	// 			assert(clusterName);
-	// 		});
-
-	// 		it('replaces Kube cluster name in hpa.yaml', function () {
-	// 			let chartFile = chartLocation + '/templates/hpa.yaml';
-	// 			assert.fileContent(chartFile, 'namespace: my_kube_namespace');
-	// 		});
-	// 	});
-	// });
+			it('replaces Kube cluster name in hpa.yaml', function () {
+				let chartFile = chartLocation + '/templates/hpa.yaml';
+				assert.fileContent(chartFile, 'namespace: my_kube_namespace');
+			});
+		});
+	});
 });
